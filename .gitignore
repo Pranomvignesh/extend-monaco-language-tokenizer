@@ -1,3 +1,3 @@
 node_modules
-public/monaco/*
+public/monaco
 package-lock.json

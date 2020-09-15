@@ -33,6 +33,7 @@ function main () {
         saveValue();
         require.reset();
         var scriptToDelete = document.head.querySelector('#loader');
+        // All Added script tags are removed
         while (scriptToDelete) {
             let temp = scriptToDelete;
             scriptToDelete = scriptToDelete.nextElementSibling;
@@ -54,12 +55,11 @@ function main () {
     function initiateMonaco () {
         require.config({
             paths: {
-                vs: "monaco/min/vs"
+                vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs"
             }
         })
         require(['vs/editor/editor.main'], createEditor);
         async function createEditor () {
-            console.log(valOf);
             const srcDiv = document.querySelector('.srcDiv');
             const monarchDiv = document.querySelector('.monarchDiv');
             const themeDiv = document.querySelector('.themeDiv');
