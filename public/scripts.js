@@ -1,4 +1,4 @@
-function main () {
+async function main () {
 
     var themeModel,
         monarchModel,
@@ -22,7 +22,7 @@ function main () {
             src: srcContainer ? srcContainer.getValue() : src
         }
     }
-    saveValue();
+    await saveValue();
 
     const ctaBtn = document.querySelector('.callToActionBtn button');
     ctaBtn.addEventListener('click', function () {
