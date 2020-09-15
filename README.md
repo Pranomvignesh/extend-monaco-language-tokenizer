@@ -1,5 +1,5 @@
-Extend Language Configuration in Monaco Editor <!-- omit in toc -->
-==============================================
+# Extend Language Configuration in Monaco Editor <!-- omit in toc -->
+
 
 Monaco editor is an online editor with syntax highlighting. It offers `syntax highlighting support for many languages by         default`.
  But we might need `custom syntax highlighting` to match our real life use-cases.
