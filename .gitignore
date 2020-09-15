@@ -1,3 +1,5 @@
 node_modules
 public/monaco/*
 package-lock.json
+public/styles.scss
+public/styles.css.map
