@@ -45,7 +45,7 @@ async function main () {
     function initiateMonaco () {
         require.config({
             paths: {
-                vs :"/monaco/min/vs/",
+                vs :"./monaco-editor/min/vs",
                 // vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs"
             }
         })
