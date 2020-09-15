@@ -3,6 +3,34 @@
           box-sizing: border-box;
 }
 
+button.tip {
+  border-bottom: 1px dashed;
+  text-decoration: none;
+}
+
+button.tip:hover {
+  cursor: help;
+  position: relative;
+}
+
+button.tip:hover span {
+  padding: 5px;
+  display: block;
+  z-index: 100;
+  left: 0px;
+  width: 280px;
+  position: absolute;
+  text-decoration: none;
+  background: black;
+  opacity: 0.8;
+  -webkit-transform: translate(0px, 15px);
+          transform: translate(0px, 15px);
+}
+
+button.tip span {
+  display: none;
+}
+
 body {
   margin: 15px 25px;
   height: 100vh;

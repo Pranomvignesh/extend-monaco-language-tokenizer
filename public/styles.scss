@@ -11,6 +11,34 @@ $fontColor : #221e37;
   box-sizing: border-box;
 }
 
+button.tip {
+  border-bottom  : 1px dashed;
+  text-decoration: none;
+
+  &:hover {
+    cursor  : help;
+    position: relative;
+
+    & span {
+      padding        : 5px;
+      display        : block;
+      z-index        : 100;
+      left           : 0px;
+      width          : 280px;
+      position       : absolute;
+      text-decoration: none;
+      background     : black;
+      opacity        : 0.8;
+      transform      : translate(0px, 15px);
+    }
+  }
+
+  & span {
+    display: none
+  }
+}
+
+
 body {
   margin        : 15px 25px;
   height        : 100vh;

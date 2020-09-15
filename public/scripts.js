@@ -7,55 +7,46 @@ async function main () {
         monarchContainer,
         srcContainer,
         valOf,
-        theme,
-        monarch,
-        src;
+        underProcess;
 
     async function saveValue () {
-        theme = await fetch('./theme.js').then(response => response.text());
-        monarch = await fetch('./monarch.js').then(response => response.text());
-        src = await fetch('./src.js').then(response => response.text());
-
         valOf = {
-            theme: themeContainer ? themeContainer.getValue() : theme,
-            monarch: monarchContainer ? monarchContainer.getValue() : monarch,
-            src: srcContainer ? srcContainer.getValue() : src
+            theme: themeContainer ? themeContainer.getValue() : await fetch('./theme.js').then(response => response.text()),
+            monarch: monarchContainer ? monarchContainer.getValue() : await fetch('./monarch.js').then(response => response.text()),
+            src: srcContainer ? srcContainer.getValue() : await fetch('./src.js').then(response => response.text())
         }
     }
     await saveValue();
 
     const ctaBtn = document.querySelector('.callToActionBtn button');
-    ctaBtn.addEventListener('click', function () {
-        /**
-         * Complete monaco instance is flushed here
-         */
-        delete window.monaco;
-        saveValue();
-        require.reset();
-        var scriptToDelete = document.head.querySelector('#loader');
-        // All Added script tags are removed
-        while (scriptToDelete) {
-            let temp = scriptToDelete;
-            scriptToDelete = scriptToDelete.nextElementSibling;
-            document.head.removeChild(temp);
+    ctaBtn.addEventListener('click', async function () {
+        if (!underProcess) {
+            underProcess = true;
+            /**
+             * Complete monaco instance is flushed here
+             */
+            delete window.monaco;
+            await saveValue();
+            require.reset();
+            var scriptToDelete = document.head.querySelector('#loader');
+            // All Added script tags are removed
+            while (scriptToDelete) {
+                let temp = scriptToDelete;
+                scriptToDelete = scriptToDelete.nextElementSibling;
+                document.head.removeChild(temp);
+            }
+            initiateMonaco();
+            underProcess = false;
+        }else{
+            console.log('Came to else');
         }
-        initiateMonaco();
     });
-
-    function loadScript (url, appendTo, attrs, callback) {
-        const script = document.createElement('script');
-        for (let attr in attrs) {
-            script.setAttribute(attr, attrs[attr]);
-        }
-        script.src = url;
-        script.onload = callback;
-        appendTo.appendChild(script)
-    }
 
     function initiateMonaco () {
         require.config({
             paths: {
-                vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs"
+                vs :"/monaco/min/vs/",
+                // vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs"
             }
         })
         require(['vs/editor/editor.main'], createEditor);
@@ -133,17 +124,17 @@ async function main () {
                     wordWrap: 'on',
                     fontSize: '14px',
                     theme: 'myCustomTheme',
-                    tabSize : 2,
+                    tabSize: 2,
                 })
                 monarchContainer = monaco.editor.create(monarchDiv, {
                     wordWrap: 'on',
                     fontSize: '14px',
-                    tabSize : 2
+                    tabSize: 2
                 })
                 themeContainer = monaco.editor.create(themeDiv, {
                     wordWrap: 'on',
                     fontSize: '14px',
-                    tabSize : 2
+                    tabSize: 2
                 })
                 srcContainer.setModel(srcModel);
                 monarchContainer.setModel(monarchModel);
