@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instructions</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./prism.css" />
+  <script type="text/javascript" src="./prism.js"></script>
+  <style>
+    footer,
+    .highlight,
+    h1,
+    h2,
+    p,
+    ul,
+    li {
+      font-family: 'Montserrat', sans-serif;
+      line-height: 25px;
+    }
+
+    body {
+      max-width: 850px;
+      min-width: 440px;
+      margin: 0px auto;
+      margin-top: 50px;
+      color: #141120;
+    }
+
+    .content {
+      padding: 0px 20px;
+      text-align: justify;
+    }
+
+    .highlight {
+      padding: 3px 3px 3px 5px;
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+    }
+
+    .highlight:hover::before {
+      height: 5px;
+    }
+
+    .highlight::before {
+      content: '';
+      position: absolute;
+      background: #81C78490;
+      height: 3px;
+      left: 0px;
+      width: 100%;
+      bottom: 0px;
+      transition: height 0.3s;
+      z-index: 0;
+      cursor: pointer;
+    }
+
+    .token.comment {
+      color: #4caf50;
+    }
+
+    /* .token.parameter,
+    .token.punctuation {
+      color: #dd4a68;
+    } */
+
+    .language-javascript {
+      border: none;
+    }
+
+    .topic {
+      display: flex;
+      align-items: baseline;
+    }
+
+    a {
+      position: relative;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <a href="/" class="back">← Go To Playground</a>
+    <h1 id="#">
+      Extend Language Configuration in Monaco Editor
+    </h1>
+  </div>
+
+  <div class="content">
+
+    <p>
+      Monaco editor is an online editor with syntax
+      highlighting. It offers <code class="highlight">syntax highlighting support for many languages by
+        default</code>.<br>
+      But we might need <code class="highlight">custom syntax highlighting</code> to match our real life
+      use-cases.<br>
+      Unfortunately, there is no API available to extend the language configuration,
+      Refer this<a href="https://github.com/microsoft/monaco-editor/issues/1927#issuecomment-690917295">comment</a>
+    </p>
+    <p>
+      As per the advice, I have overwritten the <code class="highlight">output of the built-in tokenizer</code></p>
+    <div class="tableOfContents">
+      <h2><b>Table of contents</b></h2>
+      <ul>
+        <li><a href="#how-i-approached">How I Approached</a></li>
+        <li><a href="#actual-code">Actual Code</a></li>
+        <li><a href="#advantages">Advantages</a></li>
+        <li><a href="#limitations">Limitations</a></li>
+        <li><a href="#take-away">Take Away</a></li>
+        <li><a href="#github-link">Github Link</a></li>
+      </ul>
+    </div>
+
+
+    <h2 id="how-i-approached">How I Approached</h2>
+    <ol>
+      <li>I took all the language configurations that is
+        available in the monaco editor using the API 
+        <a class="highlight"
+          href="https://microsoft.github.io/monaco-editor/api/modules/monaco.languages.html#getlanguages"
+          style="color:blueviolet">monaco.languages.getLanguages()</a>
+      </li>
+      <li>Then i filtered out my desired language (in my
+        case, I took <code class="highlight">javascript</code>)</li>
+      <li>There will a method named <code class="highlight">loader()</code>,
+        which will be available for all the registered languages</li>
+      <li>On executing the loader, it will return an
+        object
+        containing 2 keys named ,the <code class="highlight">configuration</code> and <code
+          class="highlight">language</code></li>
+      <li>This language will hold the tokenizer data</li>
+      <li>I took this tokenizer and <code class="highlight">modified the
+          certain parts with my custom tokens</code></li>
+      <li>The modification is done in such a way, that the
+        <code class="highlight">base object reference is unaffected</code></li>
+    </ol>
+
+    <h2 id="actual-code">Actual Code</h2>
+    <pre class="language-javascript line-numbers">
+      <code
+        class="language-javascript">
+        const allLangs = monaco.languages.getLanguages();
+        const { conf, language: jsLang } = await allLangs.find(({ id }) => id ==='javascript').loader();
+        for (let key in customTokenizer) {
+          const value = customTokenizer[key];
+          if (key === 'tokenizer') {
+            for (let category in value) {
+              const tokenDefs = value[category];
+              if (!jsLang.tokenizer.hasOwnProperty(category)) {
+                jsLang.tokenizer[category] = [];
+              }
+              if (Array.isArray(tokenDefs)) {
+                jsLang.tokenizer[category].unshift.apply(jsLang.tokenizer[category], tokenDefs)
+              }
+            }
+          } else if (Array.isArray(value)) {
+            if (!jsLang.hasOwnProperty(key)) {
+              jsLang[key] = [];
+            }
+            jsLang[key].unshift.apply(jsLang[key], value)
+          }
+        }
+      </code>
+    </pre>
+    <h2 id="advantages">Advantages</h2>
+    <ol>
+      <li>In monaco-editor, the <code class="highlight">javascript worker provides
+        excellent code completions</code>, If we create a new language tokenizer, we might lose this suggestions. This
+        method
+        avoids the need for a new language, thus preserves the code completions</li>
+      <li>This custom tokenizer <code class="highlight">follows the monaco editor’s
+        monarch pattern</code>, So if you have already written custom tokenizers, it will be easy for migration</li>
+      <li>The tokens are added in such a way that <code class="highlight">custom
+        tokens are given high priority</code> and this can also be modified by altering the <code
+          class="highlight">unshift</code> to
+        <code class="highlight">push</code> in <code class="highlight">jsLang keys</code></li>
+    </ol>
+    <h2 id="limitations">Limitations</h2>
+    <p>
+      As monaco editor some how stores the language
+      configuration inside monaco instance, We have to 
+      overwrite the language configuration <code class="highlight">before
+        creation of any model (or) editor</code> in that desired language
+    </p>
+    <h2 id="take-away">Take Away</h2>
+    <p>This method is possible only because of <code class="highlight">monaco
+      editor’s lazy loading feature</code> (thanks to monaco editor team), where it loads the language configuration
+      only when
+      a
+      model (or) editor instance is created for that language</p>
+    <p ><code class="highlight">So if we can change the
+        configuration of the
+        language before monaco uses it we can achieve the desired customization</code></p>
+    <h2 id="github-link">Github Link</h2>
+    <p >
+      Profile Link : <a href="https://github.com/Pranomvignesh">PranomVignesh</a><br>
+      Repository Link : <a href="https://github.com/Pranomvignesh/extend-monaco-language-tokenizer">Extend Language
+        Configuration in Monaco Editor</a>
+    </p>
+  </div>
+
+</body>
+
+</html>
