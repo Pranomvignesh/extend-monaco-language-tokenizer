@@ -1,5 +1,5 @@
 node_modules
-public/monaco/*
+public/monaco-editor/*
 package-lock.json
 public/styles.scss
 public/styles.css.map

@@ -31,6 +31,21 @@ button.tip span {
   display: none;
 }
 
+footer,
+.highlight,
+button,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 p,
+ul,
+li {
+  font-family: 'Montserrat', sans-serif;
+  line-height: 25px;
+}
+
 body {
   margin: 15px 25px;
   height: 100vh;
@@ -41,8 +56,6 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
   overflow: hidden;
   background: #fafbff;
   color: #221e37;
@@ -62,8 +75,11 @@ body .header {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  height: 40px;
-  font-size: 25px;
+}
+
+body .header a {
+  margin-left: 10px;
+  font-size: 18px;
 }
 
 body .playground {

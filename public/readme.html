@@ -16,6 +16,7 @@
     h1,
     h2,
     p,
+    /* a, */
     ul,
     li {
       font-family: 'Montserrat', sans-serif;
@@ -80,6 +81,10 @@
     a {
       position: relative;
       margin-left: 10px;
+      font-size: 16px;
+    }
+    .next{
+      float : right;
     }
   </style>
 </head>
@@ -88,6 +93,8 @@
 
   <div class="header">
     <a href="/" class="back">← Go To Playground</a>
+    <a href="https://monaco-editor-restrict-editable-area.vercel.app/" target="_blank" class="next">Restrict Editable Area in Monaco
+      Editor →</a>
     <h1 id="#">
       Extend Language Configuration in Monaco Editor
     </h1>
@@ -102,7 +109,7 @@
       But we might need <code class="highlight">custom syntax highlighting</code> to match our real life
       use-cases.<br>
       Unfortunately, there is no API available to extend the language configuration,
-      Refer this<a href="https://github.com/microsoft/monaco-editor/issues/1927#issuecomment-690917295">comment</a>
+      Refer this<a target="_blank" href="https://github.com/microsoft/monaco-editor/issues/1927#issuecomment-690917295">comment</a>
     </p>
     <p>
       As per the advice, I have overwritten the <code class="highlight">output of the built-in tokenizer</code></p>
@@ -124,6 +131,7 @@
       <li>I took all the language configurations that is
         available in the monaco editor using the API 
         <a class="highlight"
+          target="_blank"
           href="https://microsoft.github.io/monaco-editor/api/modules/monaco.languages.html#getlanguages"
           style="color:blueviolet">monaco.languages.getLanguages()</a>
       </li>
