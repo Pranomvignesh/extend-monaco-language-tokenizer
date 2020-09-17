@@ -82,6 +82,7 @@
       position: relative;
       margin-left: 10px;
       font-size: 16px;
+      color:blueviolet;
     }
     .next{
       float : right;
@@ -196,6 +197,16 @@
       configuration inside monaco instance, We have to 
       overwrite the language configuration <code class="highlight">before
         creation of any model (or) editor</code> in that desired language
+    </p>
+    <p>
+      The api which I have used here (<code class="highlight">loader()</code>), that is not a part 
+      of the exposed API and so it might break in the future.
+      <a href="https://github.com/microsoft/monaco-editor/issues/1927#issuecomment-694316525">(Refer this comment)</a>
+      <br>
+      I have used <code class="highlight">monaco-editor@0.20.0</code>. 
+      So if you are using the same version you can go for this,
+      else verify the availability of this method
+      and <code class="highlight"><b>Use it at your own risk</b></code>
     </p>
     <h2 id="take-away">Take Away</h2>
     <p>This method is possible only because of <code class="highlight">monaco
