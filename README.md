@@ -7,6 +7,8 @@ Monaco editor is an online editor with syntax highlighting. It offers `syntax hi
 
 As per the advice, I have overwritten the `output of the built-in tokenizer`
 
+Link to the demo is available [here](https://monaco-editor-extend-lang-conf.vercel.app/)
+
 **Table of contents** <!-- omit in toc -->
 ---------------------
 
